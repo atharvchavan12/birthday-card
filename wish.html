@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Birthday Card for RAJ</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      background: black;
+    }
+
+    video.bg-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      min-width: 100%;
+      min-height: 100%;
+      z-index: -2;
+      object-fit: cover;
+    }
+
+    .card {
+      width: 520px;
+      height: 300px;
+      perspective: 1200px;
+      border-radius: 20px;
+      position: relative;
+      background: transparent;
+      z-index: 1;
+    }
+
+    .card-inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 1s ease-in-out;
+      border-radius: 20px;
+    }
+
+    .card:hover .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .front, .back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 20px;
+      padding: 30px;
+      color: #ffffff;
+      background: rgba(255, 255, 150, 0.18);
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .front {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      animation: pulse 2s infinite;
+      border: 2px solid rgba(255, 255, 200, 0.4);
+    }
+
+    .back {
+      transform: rotateY(180deg);
+      text-align: left;
+      border: 2px solid rgba(255, 255, 200, 0.4);
+    }
+
+    h1, h2 {
+      margin: 10px 0;
+      text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
+    }
+
+    h1 {
+      animation: glow 2s infinite;
+    }
+
+    @keyframes glow {
+      0% { text-shadow: 0 0 5px #fff, 0 0 10px #f39c12, 0 0 15px #e74c3c; }
+      50% { text-shadow: 0 0 20px #fff, 0 0 30px #f1c40f, 0 0 40px #e67e22; }
+      100% { text-shadow: 0 0 5px #fff, 0 0 10px #f39c12, 0 0 15px #e74c3c; }
+    }
+
+    .balloons {
+      font-size: 2em;
+      animation: float 2s infinite ease-in-out;
+      filter: drop-shadow(0 0 5px #fff2a8);
+    }
+
+    p {
+      font-size: 1.1em;
+      line-height: 1.6;
+      color: #fdfdfd;
+      text-shadow: 1px 1px 3px #00000060;
+    }
+
+    .typing {
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 2px solid #fff;
+      width: 0;
+      animation: typing 4s steps(40, end) forwards;
+    }
+
+    @keyframes typing {
+      to { width: 100%; }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .floating-balloons {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+  
+
+    .balloon {
+      position: absolute;
+      font-size: 2em;
+      animation: rise 5s linear infinite;
+      opacity: 0;
+      filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
+    }
+
+    @keyframes rise {
+      0% {
+        transform: translateY(100vh) scale(0.5);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-200px) scale(1);
+        opacity: 0;
+      }
+    }
+
+    .card:hover ~ .floating-balloons .balloon {
+      animation-play-state: running;
+      opacity: 1;
+    }
+
+    /* Music Toggle Button */
+    .music-toggle {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      z-index: 999;
+      background: rgba(255,255,255,0.2);
+      border: none;
+      padding: 10px;
+      border-radius: 10px;
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+      backdrop-filter: blur(5px);
+    }
+  </style>
+  <!-- Confetti Script -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+
+  <!-- Background Video -->
+  <video id="bgVideo" class="bg-video" autoplay muted loop playsinline>
+    <source src="hb.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+
+  <!-- Audio -->
+  <audio id="birthdayMusic" loop>
+    <source src="birthday.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+  <button class="music-toggle" onclick="toggleMusic()">🔊</button>
+
+  <!-- Birthday Card -->
+  <div class="card">
+    <div class="card-inner">
+      <div class="front">
+        <h1>🎉 Happy Birthday RAJ 🎉</h1>
+        <div class="balloons">🎈🎈🎈</div>
+        <p class="typing">Wishing you a day full of excitement and joy!</p>
+      </div>
+      <div class="back">
+        <h2>Hey RAJ,</h2>
+        <p>On this special day, may you reach new heights! 🚀<br>
+        Stay awesome and keep smiling 😊<br>
+        🎁 With best wishes,<br>— Atharv 🎮</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Balloons -->
+  <div class="floating-balloons">
+    <div class="balloon" style="left: 15%;">🎈</div>
+    <div class="balloon" style="left: 35%; animation-delay: 1s;">🎈</div>
+    <div class="balloon" style="left: 55%; animation-delay: 2s;">🎈</div>
+    <div class="balloon" style="left: 75%; animation-delay: 3s;">🎈</div>
+    <div class="balloon" style="left: 90%; animation-delay: 4s;">🎈</div>
+  </div>
+
+  <!-- Script -->
+  <script>
+    document.addEventListener('click', function () {
+      const video = document.getElementById('bgVideo');
+      const music = document.getElementById('birthdayMusic');
+      video.muted = false;
+      video.play();
+      music.play();
+      confetti({
+        particleCount: 200,
+        spread: 120,
+        origin: { y: 0.6 }
+      });
+    }, { once: true });
+
+    function toggleMusic() {
+      const music = document.getElementById('birthdayMusic');
+      if (music.paused) {
+        music.play();
+      } else {
+        music.pause();
+      }
+    }
+  </script>
+
+</body>
+</html>
